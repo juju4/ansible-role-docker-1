@@ -1,6 +1,6 @@
 # Ansible Role: Docker
 
-[![CI](https://github.com/geerlingguy/ansible-role-docker/workflows/CI/badge.svg?event=push)](https://github.com/geerlingguy/ansible-role-docker/actions?query=workflow%3ACI)
+[![CI](https://github.com/geerlingguy/ansible-role-docker/actions/workflows/ci.yml/badge.svg)](https://github.com/geerlingguy/ansible-role-docker/actions/workflows/ci.yml)
 
 An Ansible Role that installs [Docker](https://www.docker.com) on Linux.
 
@@ -34,6 +34,7 @@ docker_obsolete_packages:
   - docker
   - docker.io
   - docker-engine
+  - docker-doc
   - podman-docker
   - containerd
   - runc
@@ -83,7 +84,7 @@ The main Docker repo URL, common between Debian and RHEL systems.
 ```yaml
 docker_apt_release_channel: stable
 docker_apt_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
-docker_apt_repository: "deb [arch={{ docker_apt_arch }}] {{ docker_repo_url }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}"
+docker_apt_repository: "deb [arch={{ docker_apt_arch }}{{' signed-by=/etc/apt/keyrings/docker.asc' if add_repository_key is not failed}}] {{ docker_repo_url }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} {{ docker_apt_release_channel }}"
 docker_apt_ignore_key_error: True
 docker_apt_gpg_key: "{{ docker_repo_url }}/{{ ansible_distribution | lower }}/gpg"
 docker_apt_filename: "docker"
